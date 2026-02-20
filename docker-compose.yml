@@ -1,0 +1,9 @@
+name: task-manager
+
+services:
+  app:
+    build: .                 # используем твой Dockerfile
+    container_name: my-spring-app
+    ports:
+      - "8081:8081"              # твой приложение на 8081
+    restart: unless-stopped
