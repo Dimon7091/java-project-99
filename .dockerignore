@@ -1,0 +1,9 @@
+.git
+.gradle
+build
+*.log
+Dockerfile*
+docker-compose*
+.env
+.idea
+target

@@ -3,8 +3,6 @@ spring:
     name: app
   jpa:
     show-sql: true
-    hibernate:
-      ddl-auto: update
   output:
     ansi:
       enabled: always                 # ✅ Цветной вывод
@@ -18,5 +16,6 @@ logging:
 
 app:
   welcome-message: "Welcome to Spring"
+
 server:
-  port: 8081
+  port: 8080
