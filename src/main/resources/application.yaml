@@ -19,4 +19,4 @@ logging:
 app:
   welcome-message: "Welcome to Spring"
 server:
-  port: 8081
+  port: ${APP_PORT}
