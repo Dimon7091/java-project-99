@@ -2,25 +2,20 @@ spring:
   application:
     name: app
   jpa:
-    show-sql: true                    # ✅ Глобальные JPA настройки
-    database-platform: org.hibernate.dialect.H2Dialect
-    datasource:
-      url: jdbc:h2:mem:testdb
-      driver-class-name: org.h2.Driver
-      username: sa
-  h2:
-    console:
-      enabled: true                   # ✅ H2 консоль
+    show-sql: true
+    hibernate:
+      ddl-auto: update
   output:
     ansi:
       enabled: always                 # ✅ Цветной вывод
 
-  logging:
-    level:
-      org.springframework.web: DEBUG
-      org.hibernate.SQL: DEBUG
-    pattern:
-      dateformat: "yyyy-MM-dd HH:mm:ss"  # ✅ Формат даты
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+  pattern:
+    dateformat: "yyyy-MM-dd HH:mm:ss"  # ✅ Формат даты
+
 app:
   welcome-message: "Welcome to Spring"
 server:
