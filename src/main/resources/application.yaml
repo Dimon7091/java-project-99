@@ -23,3 +23,5 @@ spring:
       dateformat: "yyyy-MM-dd HH:mm:ss"  # ✅ Формат даты
 app:
   welcome-message: "Welcome to Spring"
+server:
+  port: 8081
