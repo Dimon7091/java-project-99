@@ -45,6 +45,13 @@ dependencies {
     // Для разработки
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+    // Маппер
+    implementation("org.mapstruct:mapstruct:1.5.5.Final")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
+
+    // Json
+    implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+
     // JWT (если используете)
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
@@ -52,6 +59,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("net.datafaker:datafaker:2.5.4")
+    implementation("org.instancio:instancio-junit:3.3.0")
 }
 
 tasks.withType<Test> {

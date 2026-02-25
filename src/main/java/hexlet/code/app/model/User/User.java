@@ -1,5 +1,6 @@
-package hexlet.code.app.model;
+package hexlet.code.app.model.User;
 
+import hexlet.code.app.model.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -32,7 +33,9 @@ public class User {
 
     @Column(unique = true)
     private String email;
-    private String password;
+
+    @Column(nullable = false)
+    private String passwordDigest;
 
     @CreatedDate
     @Column(updatable = false, nullable = false)
