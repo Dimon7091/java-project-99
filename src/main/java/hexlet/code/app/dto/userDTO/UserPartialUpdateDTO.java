@@ -19,5 +19,4 @@ public record UserPartialUpdateDTO(
 
         @Size(min = 3, message = "Минимальная длина пароля 3 символа")
         JsonNullable<@Size(min = 3) String> password
-)
-{}
+) { }

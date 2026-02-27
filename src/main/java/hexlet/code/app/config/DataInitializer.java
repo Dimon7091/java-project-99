@@ -1,7 +1,6 @@
 package hexlet.code.app.config;
 
 import hexlet.code.app.dto.userDTO.UserCreateDTO;
-import hexlet.code.app.model.User.User;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.UserService;
 import lombok.extern.slf4j.Slf4j;

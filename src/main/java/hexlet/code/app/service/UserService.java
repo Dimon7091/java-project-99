@@ -8,12 +8,14 @@ import hexlet.code.app.exception.EmailAlreadyExistsException;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
 
     @Autowired
@@ -57,8 +59,8 @@ public class UserService {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь с id " + id + " не существует"));
 
-        if (!user.getEmail().equals(userData.email()) &&
-                userRepository.existsByEmail(userData.email())) {
+        if (!user.getEmail().equals(userData.email())
+                && userRepository.existsByEmail(userData.email())) {
             throw new EmailAlreadyExistsException("email " + userData.email() + " уже занят");
         }
 
@@ -75,8 +77,8 @@ public class UserService {
         if (userData.email() != null && userData.email().isPresent()) {
             String newEmail = userData.email().get();
 
-            if (!user.getEmail().equals(newEmail) &&
-                    userRepository.existsByEmail(newEmail)) {
+            if (!user.getEmail().equals(newEmail)
+                    && userRepository.existsByEmail(newEmail)) {
                 throw new EmailAlreadyExistsException(
                         "email " + newEmail + " уже занят"
                 );

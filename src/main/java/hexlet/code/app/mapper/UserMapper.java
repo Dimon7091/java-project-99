@@ -5,7 +5,13 @@ import hexlet.code.app.dto.userDTO.UserDTO;
 import hexlet.code.app.dto.userDTO.UserFullUpdateDTO;
 import hexlet.code.app.dto.userDTO.UserPartialUpdateDTO;
 import hexlet.code.app.model.User.User;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -18,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public abstract class UserMapper  {
     @Autowired
-    protected PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Mapping(source = "password", target = "passwordDigest", qualifiedByName = "hashPassword")
     public abstract User toEntity(UserCreateDTO dto);

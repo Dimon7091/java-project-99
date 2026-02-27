@@ -24,4 +24,4 @@ public record UserFullUpdateDTO(
         @NotBlank
         @Size(min = 3, message = "Длина пароля не может быть менее 3 символов")
         String password
-) {}
+) { }

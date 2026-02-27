@@ -1,10 +1,8 @@
 package hexlet.code.app.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import net.datafaker.Faker;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 

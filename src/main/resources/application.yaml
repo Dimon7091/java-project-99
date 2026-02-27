@@ -10,7 +10,7 @@ spring:
 logging:
   level:
     org.springframework.web: DEBUG
-    org.hibernate.SQL: DEBUG
+
   pattern:
     dateformat: "yyyy-MM-dd HH:mm:ss"  # ✅ Формат даты
 
