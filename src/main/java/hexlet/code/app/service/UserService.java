@@ -1,9 +1,6 @@
 package hexlet.code.app.service;
 
-import hexlet.code.app.dto.userDTO.UserCreateDTO;
-import hexlet.code.app.dto.userDTO.UserDTO;
-import hexlet.code.app.dto.userDTO.UserFullUpdateDTO;
-import hexlet.code.app.dto.userDTO.UserPartialUpdateDTO;
+import hexlet.code.app.dto.userDTO.*;
 import hexlet.code.app.exception.EmailAlreadyExistsException;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.UserMapper;
@@ -11,8 +8,7 @@ import hexlet.code.app.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @Transactional
@@ -35,10 +31,10 @@ public class UserService {
     }
 
     // === Read ===
-    public List<UserDTO> findAll() {
-        return userRepository.findAll().stream()
-                .map(user -> mapper.toDto(user))
-                .toList();
+    public IndexResponseData findAll(Pageable pageable) {
+        var pageUsers =  userRepository.findAll(pageable).map(mapper::toDto);
+        var totalUsers = pageUsers.getTotalElements();
+        return new IndexResponseData(pageUsers.stream().toList(), totalUsers);
     }
 
     public UserDTO findById(Long id) {

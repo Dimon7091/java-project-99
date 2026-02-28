@@ -1,4 +1,4 @@
-package hexlet.code.app.model.User;
+package hexlet.code.app.model.user;
 
 import hexlet.code.app.model.BaseEntity;
 import jakarta.persistence.Entity;

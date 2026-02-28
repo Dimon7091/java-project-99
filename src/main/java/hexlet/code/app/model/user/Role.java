@@ -1,4 +1,4 @@
-package hexlet.code.app.model;
+package hexlet.code.app.model.user;
 
 public enum Role {
     USER,

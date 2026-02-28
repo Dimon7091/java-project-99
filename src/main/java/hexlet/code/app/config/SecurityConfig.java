@@ -46,9 +46,17 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login").permitAll()
+                        // ===== СТАТИЧЕСКИЕ РЕСУРСЫ (ВАЖНО!) =====
+                        .requestMatchers("/", "/index.html").permitAll()
+                        .requestMatchers("/assets/**").permitAll()
+                        .requestMatchers("/static/**").permitAll()
+                        .requestMatchers("/**.js", "/**.css").permitAll()
+
+                        // ===== ПУБЛИЧНЫЕ API =====
+                        .requestMatchers("/#/login", "/api/login").permitAll()
                         .requestMatchers(POST, "/api/users").permitAll()
-                        .requestMatchers("/welcome").permitAll()
+
+                        // ===== ВСЕ ОСТАЛЬНОЕ =====
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer((rs) -> rs.jwt((jwt) -> jwt.decoder(jwtDecoder)))

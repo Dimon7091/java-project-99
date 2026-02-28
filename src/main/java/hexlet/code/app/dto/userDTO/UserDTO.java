@@ -9,6 +9,6 @@ public record UserDTO(
         String email,
         String firstName,
         String lastName,
-        @JsonFormat(pattern = "yyyy-MM-dd")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime createdAt
 ) { }
