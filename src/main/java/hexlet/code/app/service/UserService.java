@@ -65,7 +65,7 @@ public class UserService {
         return mapper.toDto(user);
     }
 
-    public UserDTO partialUpdate(Long id, UserPartialUpdateDTO userData) {
+    public UserDTO partialUpdate(Long id, UserPartiallyUpdateDTO userData) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь с id " + id + " не существует"));
 
