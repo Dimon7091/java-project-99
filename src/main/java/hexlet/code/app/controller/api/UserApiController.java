@@ -3,7 +3,7 @@ package hexlet.code.app.controller.api;
 import hexlet.code.app.dto.userDTO.UserCreateDTO;
 import hexlet.code.app.dto.userDTO.UserDTO;
 import hexlet.code.app.dto.userDTO.UserFullUpdateDTO;
-import hexlet.code.app.dto.userDTO.UserPartialUpdateDTO;
+import hexlet.code.app.dto.userDTO.UserPartiallyUpdateDTO;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.service.UserService;
 import jakarta.validation.Valid;
@@ -37,18 +37,18 @@ public class UserApiController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<UserDTO>> index(@RequestParam Integer _start,
-                                               @RequestParam Integer _end,
-                                               @RequestParam String _sort,
-                                               @RequestParam String _order) {
+    public ResponseEntity<List<UserDTO>> index(@RequestParam(defaultValue = "0") Integer _start,
+                                               @RequestParam(defaultValue = "10") Integer _end,
+                                               @RequestParam(defaultValue = "email") String _sort,
+                                               @RequestParam(defaultValue = "ASC") String _order) {
         int page = _start / (_end - _start);
         int size = _end - _start;
         Sort.Direction direction = _order.equalsIgnoreCase("DESC")
                 ? Sort.Direction.DESC
                 : Sort.Direction.ASC;
-
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, _sort));
         var responseData = userService.findAll(pageable);
+
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(responseData.totalUsers()))
                 .body(responseData.userDTOList());
@@ -73,7 +73,7 @@ public class UserApiController {
     @PatchMapping("/{id}")
     @PreAuthorize("#id == authentication.principal.claims['userId']")
     public ResponseEntity<UserDTO> partialUpdate(@PathVariable("id") Long id,
-                                                 @RequestBody UserPartialUpdateDTO userData) {
+                                                 @RequestBody UserPartiallyUpdateDTO userData) {
         var updatedUser = userService.partialUpdate(id, userData);
         return ResponseEntity.ok()
                 .body(updatedUser);

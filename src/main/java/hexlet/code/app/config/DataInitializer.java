@@ -1,7 +1,9 @@
 package hexlet.code.app.config;
 
 import hexlet.code.app.dto.userDTO.UserCreateDTO;
-import hexlet.code.app.model.User.User;
+import hexlet.code.app.model.taskStatus.TaskStatus;
+import hexlet.code.app.model.user.User;
+import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +16,12 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 public class DataInitializer {
+
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TaskStatusRepository taskStatusRepository;
 
     @Autowired
     private Faker faker;
@@ -44,6 +50,7 @@ public class DataInitializer {
             }
 
             generateUsers(15);
+            generateDefaultTaskStatuses();
         };
     }
 
@@ -57,18 +64,23 @@ public class DataInitializer {
                     .build();
             if (!userRepository.existsByEmail(user.getEmail())) {
                 userRepository.save(user);
-                log.info("✅ User with email: {} created", user.getEmail());
+                log.info("✅ user with email: {} created", user.getEmail());
             } else {
-                log.info("❌ User with email: {} is already exist", user.getEmail());
-            }
-
-            try {
-                Thread.sleep(200);  // ✅ 1 секунда задержки
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();  // ✅ Восстанавливаем флаг
-                break;
+                log.info("❌ user with email: {} is already exist", user.getEmail());
             }
         }
     }
 
+    public void generateDefaultTaskStatuses() {
+        var task1 = TaskStatus.builder().name("Draft").slug("draft").build();
+        var task2 = TaskStatus.builder().name("ToReview").slug("to_review").build();
+        var task3 = TaskStatus.builder().name("ToBeFixed").slug("to_be_fixed").build();
+        var task4 = TaskStatus.builder().name("ToPublish").slug("to_publish").build();
+        var task5 = TaskStatus.builder().name("Published").slug("published").build();
+        taskStatusRepository.save(task1);
+        taskStatusRepository.save(task2);
+        taskStatusRepository.save(task3);
+        taskStatusRepository.save(task4);
+        taskStatusRepository.save(task5);
+    }
 }

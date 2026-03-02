@@ -1,13 +1,12 @@
 package hexlet.code.app.controller.api;
 
 import hexlet.code.app.dto.AuthRequest;
-import hexlet.code.app.model.User.User;
+import hexlet.code.app.model.user.User;
 import hexlet.code.app.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

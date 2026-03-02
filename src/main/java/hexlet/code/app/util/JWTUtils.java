@@ -1,6 +1,6 @@
 package hexlet.code.app.util;
 
-import hexlet.code.app.model.User.User;
+import hexlet.code.app.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;

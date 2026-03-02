@@ -3,8 +3,8 @@ package hexlet.code.app.mapper;
 import hexlet.code.app.dto.userDTO.UserCreateDTO;
 import hexlet.code.app.dto.userDTO.UserDTO;
 import hexlet.code.app.dto.userDTO.UserFullUpdateDTO;
-import hexlet.code.app.dto.userDTO.UserPartialUpdateDTO;
-import hexlet.code.app.model.User.User;
+import hexlet.code.app.dto.userDTO.UserPartiallyUpdateDTO;
+import hexlet.code.app.model.user.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.Mapping;
@@ -30,7 +30,7 @@ public abstract class UserMapper  {
     public abstract User toEntity(UserCreateDTO dto);
     public abstract UserDTO toDto(User model);
     public abstract void fullUpdate(UserFullUpdateDTO dto, @MappingTarget User model);
-    public abstract void partialUpdate(UserPartialUpdateDTO dto, @MappingTarget User model);
+    public abstract void partialUpdate(UserPartiallyUpdateDTO dto, @MappingTarget User model);
 
     @Named("hashPassword")
     protected String hashPassword(String rawPassword) {

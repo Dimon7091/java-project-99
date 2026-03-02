@@ -1,7 +1,7 @@
 package hexlet.code.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hexlet.code.app.model.User.User;
+import hexlet.code.app.model.user.User;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.util.JWTUtils;
 import jakarta.transaction.Transactional;
@@ -62,7 +62,7 @@ public class UserApiControllerTest {
                 .email("user@example.com")
                 .passwordDigest(passwordEncoder.encode("password123"))
                 .firstName("Test")
-                .lastName("User")
+                .lastName("user")
                 .build();
         userRepository.save(testUser);
 
@@ -71,7 +71,7 @@ public class UserApiControllerTest {
                 .email("another@example.com")
                 .passwordDigest(passwordEncoder.encode("password123"))
                 .firstName("Another")
-                .lastName("User")
+                .lastName("user")
                 .build();
         userRepository.save(anotherUser);
 
@@ -92,7 +92,7 @@ public class UserApiControllerTest {
                     "email", "new@example.com",
                     "password", "password123",
                     "firstName", "New",
-                    "lastName", "User"
+                    "lastName", "user"
             );
 
             mockMvc.perform(post("/api/users")
@@ -111,7 +111,7 @@ public class UserApiControllerTest {
                     "email", testUser.getEmail(),
                     "password", "password123",
                     "firstName", "New",
-                    "lastName", "User"
+                    "lastName", "user"
             );
 
             mockMvc.perform(post("/api/users")
@@ -249,7 +249,7 @@ public class UserApiControllerTest {
 //        @BeforeEach
 //        void setUpAdmin() {
 //            // Создаем админа
-//            User admin = User.builder()
+//            user admin = user.builder()
 //                    .email("admin@example.com")
 //                    .passwordDigest(passwordEncoder.encode("admin123"))
 //                    .build();
@@ -260,7 +260,7 @@ public class UserApiControllerTest {
 //        @DisplayName("Админ может удалять любого пользователя")
 //        void adminCanDeleteAnyUser() throws Exception {
 //            // Генерируем токен для админа
-//            User admin = userRepository.findByEmail("admin@example.com").get();
+//            user admin = userRepository.findByEmail("admin@example.com").get();
 //            String adminToken = jwtUtils.generateToken(admin);
 //
 //            mockMvc.perform(delete("/api/users/{id}", anotherUser.getId())
