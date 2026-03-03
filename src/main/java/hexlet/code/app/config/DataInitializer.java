@@ -1,21 +1,23 @@
 package hexlet.code.app.config;
 
-import hexlet.code.app.dto.userDTO.UserCreateDTO;
 import hexlet.code.app.model.taskStatus.TaskStatus;
 import hexlet.code.app.model.user.User;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
-import hexlet.code.app.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Slf4j
 @Configuration
 public class DataInitializer {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -26,36 +28,50 @@ public class DataInitializer {
     @Autowired
     private Faker faker;
 
-    @Autowired
-    private UserService userService;
-
     @Bean
     public CommandLineRunner initializeDatabase() {
         return (args) -> {
-            String adminEmail = "dimarik70rus@gmail.com";
-
-            if (!userRepository.existsByEmail(adminEmail)) {
-                log.info("Create default admin user: {} ", adminEmail);
-                var adminData = new UserCreateDTO(
-                        adminEmail,
+            // Если юзер репозиторий пустой создаем админа
+            if (userRepository.count() == 0) {
+                createUserAdmin(
+                        "dimarik70rus@gmail.com",
                         "Дмитрий",
                         "Горбунов",
                         "qwerty"
                 );
-                userService.create(adminData);
-                log.info("✅ Admin user created successfully!");
-                log.info("📧 Email: {}", adminEmail);
-            } else {
-                log.info("Admin user is already exist: {} ", adminEmail);
+                generateUsers(15);
             }
-
-            generateUsers(15);
-            generateDefaultTaskStatuses();
+            // Если репозиторий статусов пустой создаем дефолтные статусы
+            if (taskStatusRepository.count() == 0) {
+                generateDefaultTaskStatuses();
+            }
         };
     }
 
+    public void createUserAdmin(String email,
+                                String firstName,
+                                String lastName,
+                                String password) {
+
+        if (!userRepository.existsByEmail(email)) {
+            log.info("Create default admin user: {} ", email);
+            var admin = User.builder()
+                    .email(email)
+                    .passwordDigest(passwordEncoder.encode(password))
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .build();
+
+            userRepository.save(admin);
+            log.info("✅ Admin user created successfully!");
+            log.info("📧 Email: {}", email);
+        } else {
+            log.info("Admin user is already exist: {} ", email);
+        }
+    }
+
     public void generateUsers(Integer count) {
-        for (int i = 0; i < count; i++ ) {
+        for (int i = 0; i < count; i++) {
             User user = User.builder()
                     .email(faker.internet().emailAddress())
                     .firstName(faker.name().firstName())

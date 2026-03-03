@@ -5,7 +5,13 @@ import hexlet.code.app.dto.taskStatusDTO.TaskStatusDTO;
 import hexlet.code.app.dto.taskStatusDTO.TaskStatusFullUpdateDTO;
 import hexlet.code.app.dto.taskStatusDTO.TaskStatusPartiallyUpdateDTO;
 import hexlet.code.app.model.taskStatus.TaskStatus;
-import org.mapstruct.*;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.MappingTarget;
+
 
 @Mapper(
         uses = {JsonNullableMapper.class},

@@ -37,12 +37,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Map<String, String>> handleStatusSlugAlreadyExistsException(StatusSlugAlreadyExistsException ex) {
+    public ResponseEntity<Map<String, String>>
+    handleStatusSlugAlreadyExistsException(StatusSlugAlreadyExistsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
     }
 
     @ExceptionHandler
-    public ResponseEntity<Map<String, String>> handleEntityWithIdAlreadyExistsException(EntityWithIdAlreadyExistsException ex) {
+    public ResponseEntity<Map<String, String>>
+    handleEntityWithIdAlreadyExistsException(EntityWithIdAlreadyExistsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
     }
 

@@ -1,6 +1,11 @@
 package hexlet.code.app.service;
 
-import hexlet.code.app.dto.userDTO.*;
+import hexlet.code.app.dto.userDTO.IndexResponseData;
+import hexlet.code.app.dto.userDTO.UserCreateDTO;
+import hexlet.code.app.dto.userDTO.UserDTO;
+import hexlet.code.app.dto.userDTO.UserFullUpdateDTO;
+import hexlet.code.app.dto.userDTO.UserPartiallyUpdateDTO;
+
 import hexlet.code.app.exception.EmailAlreadyExistsException;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.UserMapper;
