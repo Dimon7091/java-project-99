@@ -1,9 +1,8 @@
 package hexlet.code.app.handler;
 
 import hexlet.code.app.exception.EmailAlreadyExistsException;
-import hexlet.code.app.exception.EntityWithIdAlreadyExistsException;
 import hexlet.code.app.exception.ResourceNotFoundException;
-import hexlet.code.app.exception.StatusSlugAlreadyExistsException;
+import hexlet.code.app.exception.ResourceAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,16 +36,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Map<String, String>>
-    handleStatusSlugAlreadyExistsException(StatusSlugAlreadyExistsException ex) {
+    public ResponseEntity<Map<String, String>> handleResourceAlreadyExistsException(
+            ResourceAlreadyExistsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
     }
-
-    @ExceptionHandler
-    public ResponseEntity<Map<String, String>>
-    handleEntityWithIdAlreadyExistsException(EntityWithIdAlreadyExistsException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
-    }
-
-
 }
