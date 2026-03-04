@@ -39,9 +39,7 @@ public class TaskStatusApiController {
 
     @GetMapping("")
     public ResponseEntity<List<TaskStatusDTO>> index() {
-
         var taskStatuses = taskStatusService.findAll();
-
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(taskStatuses.size()))
                 .body(taskStatuses);
@@ -56,7 +54,7 @@ public class TaskStatusApiController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TaskStatusDTO> fullUpdate(@PathVariable("id") Long id,
-                                                    @RequestBody TaskStatusFullUpdateDTO taskStatusData) {
+                                                    @Valid @RequestBody TaskStatusFullUpdateDTO taskStatusData) {
         var updatedTaskStatus = taskStatusService.fullUpdate(id, taskStatusData);
         return ResponseEntity.ok()
                 .body(updatedTaskStatus);
@@ -64,7 +62,8 @@ public class TaskStatusApiController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<TaskStatusDTO> partialUpdate(@PathVariable("id") Long id,
-                                                 @RequestBody TaskStatusPartiallyUpdateDTO taskStatusData) {
+                                                       @Valid @RequestBody
+                                                       TaskStatusPartiallyUpdateDTO taskStatusData) {
         var updatedTaskStatus = taskStatusService.partialUpdate(id, taskStatusData);
         return ResponseEntity.ok()
                 .body(updatedTaskStatus);

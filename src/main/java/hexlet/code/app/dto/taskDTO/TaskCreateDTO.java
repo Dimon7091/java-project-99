@@ -15,5 +15,6 @@ public record TaskCreateDTO(
         String content,
 
         @NotBlank(message = "Статус не может быть пустым")
+        @Size(min = 1)
         String status
 ) { }
