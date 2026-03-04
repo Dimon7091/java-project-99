@@ -2,8 +2,7 @@ package hexlet.code.app.model.label;
 
 import hexlet.code.app.model.task.Task;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
@@ -12,10 +11,13 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 
 @Entity
 @Table(name = "labels")
 @EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Label {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

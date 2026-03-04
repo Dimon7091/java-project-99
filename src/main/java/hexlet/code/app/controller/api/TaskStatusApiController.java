@@ -33,7 +33,7 @@ public class TaskStatusApiController {
     @PostMapping("")
     public ResponseEntity<TaskStatusDTO> create(@Valid @RequestBody TaskStatusCreateDTO taskStatusData) {
         var savedTaskStatus = taskStatusService.create(taskStatusData);
-        return ResponseEntity.created(URI.create("/api/task_statuses" + savedTaskStatus.id()))
+        return ResponseEntity.created(URI.create("/api/task_statuses/" + savedTaskStatus.id()))
                 .body(savedTaskStatus);
     }
 

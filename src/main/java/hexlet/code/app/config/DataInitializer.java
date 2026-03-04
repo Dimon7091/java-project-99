@@ -1,7 +1,9 @@
 package hexlet.code.app.config;
 
+import hexlet.code.app.model.label.Label;
 import hexlet.code.app.model.taskStatus.TaskStatus;
 import hexlet.code.app.model.user.User;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,9 @@ public class DataInitializer {
     private TaskStatusRepository taskStatusRepository;
 
     @Autowired
+    private LabelRepository labelRepository;
+
+    @Autowired
     private Faker faker;
 
     @Bean
@@ -39,11 +44,17 @@ public class DataInitializer {
                         "Горбунов",
                         "qwerty"
                 );
+                // Генерируем юзеров если нужно
                 generateUsers(15);
             }
+
             // Если репозиторий статусов пустой создаем дефолтные статусы
             if (taskStatusRepository.count() == 0) {
-                generateDefaultTaskStatuses();
+                createDefaultTaskStatuses();
+            }
+
+            if (labelRepository.count() == 0) {
+                createDefaultLabels();
             }
         };
     }
@@ -87,16 +98,23 @@ public class DataInitializer {
         }
     }
 
-    public void generateDefaultTaskStatuses() {
-        var task1 = TaskStatus.builder().name("Draft").slug("draft").build();
-        var task2 = TaskStatus.builder().name("ToReview").slug("to_review").build();
-        var task3 = TaskStatus.builder().name("ToBeFixed").slug("to_be_fixed").build();
-        var task4 = TaskStatus.builder().name("ToPublish").slug("to_publish").build();
-        var task5 = TaskStatus.builder().name("Published").slug("published").build();
-        taskStatusRepository.save(task1);
-        taskStatusRepository.save(task2);
-        taskStatusRepository.save(task3);
-        taskStatusRepository.save(task4);
-        taskStatusRepository.save(task5);
+    public void createDefaultTaskStatuses() {
+        var taskStatus1 = TaskStatus.builder().name("Draft").slug("draft").build();
+        var taskStatus2 = TaskStatus.builder().name("ToReview").slug("to_review").build();
+        var taskStatus3 = TaskStatus.builder().name("ToBeFixed").slug("to_be_fixed").build();
+        var taskStatus4 = TaskStatus.builder().name("ToPublish").slug("to_publish").build();
+        var taskStatus5 = TaskStatus.builder().name("Published").slug("published").build();
+        taskStatusRepository.save(taskStatus1);
+        taskStatusRepository.save(taskStatus2);
+        taskStatusRepository.save(taskStatus3);
+        taskStatusRepository.save(taskStatus4);
+        taskStatusRepository.save(taskStatus5);
+    }
+
+    public void createDefaultLabels() {
+        var defaultLabel1 = Label.builder().name("feature").build();
+        var defaultLabel2 = Label.builder().name("bug").build();
+        labelRepository.save(defaultLabel1);
+        labelRepository.save(defaultLabel2);
     }
 }

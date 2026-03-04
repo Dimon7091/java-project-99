@@ -40,6 +40,7 @@ public abstract class TaskMapper  {
     @Mapping(source = "content", target = "description")
     @Mapping(source = "assignee_id", target = "assignee", qualifiedByName = "assigneeIdToUser")
     @Mapping(source = "status", target = "taskStatus", qualifiedByName = "slugToStatus")
+    @Mapping(target = "labels", ignore = true)
     public abstract Task toEntity(TaskCreateDTO dto);
 
     @Mapping(source = "name", target = "title")
@@ -52,12 +53,14 @@ public abstract class TaskMapper  {
     @Mapping(source = "content", target = "description")
     @Mapping(source = "assignee_id", target = "assignee", qualifiedByName = "assigneeIdToUser")
     @Mapping(source = "status", target = "taskStatus", qualifiedByName = "slugToStatus")
+    @Mapping(target = "labels", ignore = true)
     public abstract void fullUpdate(TaskFullUpdateDTO dto, @MappingTarget Task model);
 
     @Mapping(source = "title", target = "name")
     @Mapping(source = "content", target = "description")
     @Mapping(source = "assignee_id", target = "assignee", qualifiedByName = "assigneeIdToUser")
     @Mapping(source = "status", target = "taskStatus", qualifiedByName = "slugToStatus")
+    @Mapping(target = "labels", ignore = true)
     public abstract void partialUpdate(TaskPartiallyUpdateDTO dto, @MappingTarget Task model);
 
     @Named("slugToStatus")
@@ -81,5 +84,10 @@ public abstract class TaskMapper  {
     protected Long assigneeToAssigneeId(User assignee) {
         return assignee.getId();
     }
+
+//    @Named("addLabel")
+//    protected Long addLabel(User assignee) {
+//        return assignee.getId();
+//    }
 }
 

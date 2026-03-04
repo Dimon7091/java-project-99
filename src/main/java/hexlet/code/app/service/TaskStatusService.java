@@ -5,7 +5,7 @@ import hexlet.code.app.dto.taskStatusDTO.TaskStatusDTO;
 import hexlet.code.app.dto.taskStatusDTO.TaskStatusFullUpdateDTO;
 import hexlet.code.app.dto.taskStatusDTO.TaskStatusPartiallyUpdateDTO;
 import hexlet.code.app.exception.ResourceNotFoundException;
-import hexlet.code.app.exception.StatusSlugAlreadyExistsException;
+import hexlet.code.app.exception.ResourceAlreadyExistsException;
 import hexlet.code.app.mapper.TaskStatusMapper;
 import hexlet.code.app.repository.TaskStatusRepository;
 import jakarta.transaction.Transactional;
@@ -27,7 +27,7 @@ public class TaskStatusService {
     // === Create ===
     public TaskStatusDTO create(TaskStatusCreateDTO taskStatusData) {
         if (taskStatusRepository.existsBySlug(taskStatusData.slug())) {
-            throw new StatusSlugAlreadyExistsException("Слаг " + taskStatusData.slug() + " уже существует");
+            throw new ResourceAlreadyExistsException("Слаг " + taskStatusData.slug() + " уже существует");
         }
         var taskStatus = mapper.toEntity(taskStatusData);
         var savedTaskStatus = taskStatusRepository.save(taskStatus);
@@ -59,7 +59,7 @@ public class TaskStatusService {
 
         if (!taskStatus.getSlug().equals(taskStatusData.slug())
                 && taskStatusRepository.existsBySlug(taskStatusData.slug())) {
-            throw new StatusSlugAlreadyExistsException("Слаг " + taskStatusData.slug() + " уже занят");
+            throw new ResourceAlreadyExistsException("Слаг " + taskStatusData.slug() + " уже занят");
         }
 
         mapper.fullUpdate(taskStatusData, taskStatus);
@@ -76,7 +76,7 @@ public class TaskStatusService {
 
             if (!taskStatus.getSlug().equals(newSlug)
                     && taskStatusRepository.existsBySlug(newSlug)) {
-                throw new StatusSlugAlreadyExistsException("Слаг " + newSlug + " уже занят");
+                throw new ResourceAlreadyExistsException("Слаг " + newSlug + " уже занят");
             }
         }
 

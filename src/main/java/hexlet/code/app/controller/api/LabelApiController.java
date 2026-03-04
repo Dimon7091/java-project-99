@@ -29,6 +29,7 @@ public class LabelApiController {
     public ResponseEntity<List<LabelDTO>> index() {
         var labels = labelService.findAll();
         return ResponseEntity.ok()
+                .header("X-Total-Count", String.valueOf(labels.size()))
                 .body(labels);
     }
 

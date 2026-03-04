@@ -42,7 +42,7 @@ public class Task {
     @JoinColumn(name = "task_status_id", nullable = false)
     private TaskStatus taskStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "task_labels",
             joinColumns = @JoinColumn(name = "task_id"),
@@ -57,15 +57,21 @@ public class Task {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    private void addLabel(Label label, Task task) {
+    public void addLabel(Label label) {
+        if (this.labels == null) {
+            this.labels = new HashSet<>();  // ✅ Ленивая инициализация
+        }
+
         if (!this.labels.contains(label)) {
             this.labels.add(label);
-            label.addTask(task);
+            label.addTask(this);
         }
     }
 
-    private void removeLabel(Label label, Task task) {
-        this.labels.remove(label);
-        label.removeTask(task);
+    public void removeLabel(Label label) {
+        if (this.labels.contains(label)) {
+            this.labels.remove(label);
+            label.removeTask(this);
+        }
     }
 }

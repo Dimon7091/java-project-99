@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public record TaskCreateDTO(
         @NotBlank(message = "Имя задачи не может быть пустым")
         @Size(min = 1, message = "Имя задачи должно быть не менее 1 символа")
@@ -16,5 +18,6 @@ public record TaskCreateDTO(
 
         @NotBlank(message = "Статус не может быть пустым")
         @Size(min = 1)
-        String status
+        String status,
+        List<Long> taskLabelIds
 ) { }
