@@ -91,9 +91,8 @@ public class UserService {
 
     // === Delete ===
     public void delete(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new EmailAlreadyExistsException("Пользователь с id " + id + " не существует");
-        }
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь с id " + id + " не существует"));
         userRepository.deleteById(id);
     }
 }

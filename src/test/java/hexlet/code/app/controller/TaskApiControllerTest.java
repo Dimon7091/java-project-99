@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -125,7 +126,8 @@ public class TaskApiControllerTest {
                     "index", 13,
                     "content", "Test task for test",
                     "status", "test_status",
-                    "assignee_id", testUser.getId()
+                    "assignee_id", testUser.getId(),
+                    "taskLabelIds", List.of(1)
             );
 
             mockMvc.perform(post("/api/tasks")
@@ -171,7 +173,8 @@ public class TaskApiControllerTest {
                     "index", 14,
                     "content", "Test task for test update",
                     "status", anotherStatus.getSlug(),
-                    "assignee_id", testUser.getId()
+                    "assignee_id", testUser.getId(),
+                    "taskLabelIds", List.of(1)
             );
 
             mockMvc.perform(put("/api/tasks/" + testTask.getId())

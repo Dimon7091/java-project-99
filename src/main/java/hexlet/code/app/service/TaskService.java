@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class TaskService {
@@ -89,7 +88,8 @@ public class TaskService {
             List<Label> labels = taskData.taskLabelIds().get().stream()
                     .map(labelId -> {
                         return labelRepository.findById(labelId)
-                                .orElseThrow(() -> new ResourceNotFoundException("Метки с id: " + labelId + "не найдено"));
+                                .orElseThrow(()
+                                        -> new ResourceNotFoundException("Метки с id: " + labelId + "не найдено"));
                     })
                     .toList();
             for (var label: labels) {
@@ -108,5 +108,4 @@ public class TaskService {
         }
         taskRepository.deleteById(id);
     }
-
 }

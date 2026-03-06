@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 
-public abstract class TaskMapper  {
+public abstract class TaskMapper {
 
     @Autowired
     private TaskStatusRepository taskStatusRepository;
@@ -84,10 +84,4 @@ public abstract class TaskMapper  {
     protected Long assigneeToAssigneeId(User assignee) {
         return assignee.getId();
     }
-
-//    @Named("addLabel")
-//    protected Long addLabel(User assignee) {
-//        return assignee.getId();
-//    }
 }
-

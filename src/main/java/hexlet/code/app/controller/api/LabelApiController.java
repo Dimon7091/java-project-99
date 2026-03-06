@@ -4,9 +4,17 @@ import hexlet.code.app.dto.labelDTO.LabelCreateDTO;
 import hexlet.code.app.dto.labelDTO.LabelDTO;
 import hexlet.code.app.dto.labelDTO.LabelUpdateDTO;
 import hexlet.code.app.service.LabelService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.net.URI;
 import java.util.List;
@@ -19,7 +27,7 @@ public class LabelApiController {
     private LabelService labelService;
 
     @PostMapping("")
-    public ResponseEntity<LabelDTO> create(@RequestBody LabelCreateDTO labelData) {
+    public ResponseEntity<LabelDTO> create(@Valid @RequestBody LabelCreateDTO labelData) {
         var label = labelService.create(labelData);
         return ResponseEntity.created(URI.create("/api/labels/" + label.id()))
                 .body(label);
@@ -41,7 +49,7 @@ public class LabelApiController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LabelDTO> update(@PathVariable Long id, @RequestBody LabelUpdateDTO labelData) {
+    public ResponseEntity<LabelDTO> update(@PathVariable Long id, @Valid @RequestBody LabelUpdateDTO labelData) {
         var updatedLabel = labelService.update(id, labelData);
         return ResponseEntity.ok()
                 .body(updatedLabel);

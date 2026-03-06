@@ -3,9 +3,19 @@ package hexlet.code.app.model.task;
 import hexlet.code.app.model.label.Label;
 import hexlet.code.app.model.taskStatus.TaskStatus;
 import hexlet.code.app.model.user.User;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
 
-
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
