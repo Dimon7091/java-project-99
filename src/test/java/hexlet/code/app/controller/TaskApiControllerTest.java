@@ -23,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +78,8 @@ public class TaskApiControllerTest {
     public void setUp() {
         userRepository.deleteAll();
         taskStatusRepository.deleteAll();
+        taskRepository.deleteAll();
+        labelRepository.deleteAll();
 
         // Создаем тестового пользователя
         testUser = User.builder()
@@ -110,6 +111,8 @@ public class TaskApiControllerTest {
                 .taskStatus(testStatus)
                 .assignee(testUser)
                 .build();
+        testUser.addTask(testTask);
+
         anotherTask = Task.builder()
                 .name("Task")
                 .index(12)
@@ -117,6 +120,7 @@ public class TaskApiControllerTest {
                 .taskStatus(testStatus)
                 .assignee(testUser)
                 .build();
+        testUser.addTask(anotherTask);
         taskRepository.save(testTask);
         taskRepository.save(anotherTask);
 
@@ -221,7 +225,7 @@ public class TaskApiControllerTest {
         }
 
         @Test
-        @DisplayName("DELETE/api/tasks - успешное удаление задачи (аунтефицирован 204)")
+        @DisplayName("DELETE/api/tasks - успешное удаление задачи (аунтефицирован 409)")
         public void deleteTask_Authenticated_ShouldRetorn204() throws Exception {
             mockMvc.perform(delete("/api/tasks/" + testTask.getId())
                             .header("Authorization", "Bearer " + userToken))
@@ -296,7 +300,7 @@ public class TaskApiControllerTest {
 
         @Test
         @DisplayName("POST/api/tasks - ну успешное создание задачи (не аунтефицирован 401)")
-        public void postTask_Unauthenticated_ShouldRetorn201() throws Exception {
+        public void postTask_Unauthenticated_ShouldRetorn401() throws Exception {
             var taskData = Map.of(
                     "title", "Task for test",
                     "index", 13,
@@ -314,7 +318,7 @@ public class TaskApiControllerTest {
 
         @Test
         @DisplayName("GET/api/tasks - не успешное получение списка задач (не аунтефицирован 401)")
-        public void getTasks_Unauthenticated_ShouldRetorn200() throws Exception {
+        public void getTasks_Unauthenticated_ShouldRetorn401() throws Exception {
             mockMvc.perform(get("/api/tasks")
                             .header("Authorization", "Bearer "))
                     .andExpect(status().isUnauthorized());
@@ -322,7 +326,7 @@ public class TaskApiControllerTest {
 
         @Test
         @DisplayName("GET/api/tasks/id - не успешное получение задачи по ID (не аунтефицирован 401)")
-        public void getTaskById_Unauthenticated_ShouldRetorn200() throws Exception {
+        public void getTaskById_Unauthenticated_ShouldRetorn401() throws Exception {
             mockMvc.perform(get("/api/tasks/" + testTask.getId())
                             .header("Authorization", "Bearer "))
                     .andExpect(status().isUnauthorized());
@@ -330,7 +334,7 @@ public class TaskApiControllerTest {
 
         @Test
         @DisplayName("PUT/api/tasks/id - не успешное полное обновлени задачи (не аунтефицирован 401)")
-        public void fullUpdateTask_Unauthenticated_ShouldRetorn200() throws Exception {
+        public void fullUpdateTask_Unauthenticated_ShouldRetorn401() throws Exception {
             var updatedTaskData = Map.of(
                     "title", "Updated task",
                     "index", 14,
@@ -348,7 +352,7 @@ public class TaskApiControllerTest {
 
         @Test
         @DisplayName("PATCH/api/tasks/id - не успешное частичное обновлени задачи (не аунтефицирован 401)")
-        public void partialUpdateTask_Unauthenticated_ShouldRetorn200() throws Exception {
+        public void partialUpdateTask_Unauthenticated_ShouldRetorn401() throws Exception {
             var updatedTaskData = Map.of(
                     "title", "Updated task",
                     "content", "Test task for test update"
@@ -363,7 +367,7 @@ public class TaskApiControllerTest {
 
         @Test
         @DisplayName("DELETE/api/tasks - не успешное удаление задачи (не аунтефицирован 401)")
-        public void deleteTask_Unauthenticated_ShouldRetorn204() throws Exception {
+        public void deleteTask_Unauthenticated_ShouldRetorn401() throws Exception {
             mockMvc.perform(delete("/api/tasks/" + testTask.getId())
                             .header("Authorization", "Bearer "))
                     .andExpect(status().isUnauthorized());

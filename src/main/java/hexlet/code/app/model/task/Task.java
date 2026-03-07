@@ -88,9 +88,12 @@ public class Task {
 
     // Добавление Assignee
     public void addAssignee(User assignee) {
-        if (this.assignee == null) {
-            this.setAssignee(assignee);
-            assignee.addTask(this);
+        // Отвязываем от старого
+        if (this.assignee != null) {
+            this.assignee.getTasks().remove(this);
         }
+
+        this.assignee = assignee;
+        assignee.addTask(this);
     }
 }

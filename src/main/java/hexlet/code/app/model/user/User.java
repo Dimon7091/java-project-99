@@ -52,7 +52,14 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column
     @OneToMany(mappedBy = "assignee")
-    private Set<Task> tasks = new HashSet<>();
+    private Set<Task> tasks;
+
+    public Set<Task> getTasks() {
+        if (this.tasks == null) {
+            this.tasks = new HashSet<>();  // Ленивая инициализация
+        }
+        return this.tasks;
+    }
 
     @Column(nullable = false)
     private String passwordDigest;
@@ -66,10 +73,7 @@ public class User extends BaseEntity implements UserDetails {
 
     // Добавление Task
     public void addTask(Task task) {
-        if (this.tasks == null) {
-            this.tasks = new HashSet<>();
-        }
-        this.tasks.add(task);
+        getTasks().add(task);  // Всегда используем геттер!
     }
 
     public void removeTask(Task task) {

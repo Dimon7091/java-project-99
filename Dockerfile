@@ -3,6 +3,7 @@ WORKDIR /app
 COPY build.gradle.kts settings.gradle.kts ./
 RUN gradle dependencies --no-daemon
 COPY src ./src
+COPY src/main/resources/static ./src/main/resources/static
 RUN gradle bootJar -x test --no-daemon
 
 FROM eclipse-temurin:21-jre-alpine
