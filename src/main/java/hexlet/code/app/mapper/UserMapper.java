@@ -27,9 +27,16 @@ public abstract class UserMapper  {
     private PasswordEncoder passwordEncoder;
 
     @Mapping(source = "password", target = "passwordDigest", qualifiedByName = "hashPassword")
+    @Mapping(target = "tasks", ignore = true)
     public abstract User toEntity(UserCreateDTO dto);
     public abstract UserDTO toDto(User model);
+
+    @Mapping(source = "password", target = "passwordDigest", qualifiedByName = "hashPassword")
+    @Mapping(target = "tasks", ignore = true)
     public abstract void fullUpdate(UserFullUpdateDTO dto, @MappingTarget User model);
+
+    @Mapping(source = "password", target = "passwordDigest", qualifiedByName = "hashPassword")
+    @Mapping(target = "tasks", ignore = true)
     public abstract void partialUpdate(UserPartiallyUpdateDTO dto, @MappingTarget User model);
 
     @Named("hashPassword")

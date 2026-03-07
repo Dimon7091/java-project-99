@@ -6,6 +6,7 @@ import hexlet.code.app.dto.userDTO.UserDTO;
 import hexlet.code.app.dto.userDTO.UserFullUpdateDTO;
 import hexlet.code.app.dto.userDTO.UserPartiallyUpdateDTO;
 
+import hexlet.code.app.exception.ConflictException;
 import hexlet.code.app.exception.EmailAlreadyExistsException;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.UserMapper;
@@ -93,6 +94,12 @@ public class UserService {
     public void delete(Long id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь с id " + id + " не существует"));
+        if (!user.getTasks().isEmpty()) {
+            throw new ConflictException(
+                    "Невозможно удалить пользователя. Он назначен исполнителем в " +
+                            user.getTasks().size() + " задачах!"
+            );
+        }
         userRepository.deleteById(id);
     }
 }

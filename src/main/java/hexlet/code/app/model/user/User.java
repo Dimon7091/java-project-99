@@ -1,12 +1,15 @@
 package hexlet.code.app.model.user;
 
 import hexlet.code.app.model.BaseEntity;
+import hexlet.code.app.model.task.Task;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+
 import jakarta.persistence.GenerationType;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +26,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -45,6 +50,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(unique = true)
     private String email;
 
+    @Column
+    @OneToMany(mappedBy = "assignee")
+    private Set<Task> tasks = new HashSet<>();
+
     @Column(nullable = false)
     private String passwordDigest;
 
@@ -54,6 +63,18 @@ public class User extends BaseEntity implements UserDetails {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    // Добавление Task
+    public void addTask(Task task) {
+        if (this.tasks == null) {
+            this.tasks = new HashSet<>();
+        }
+        this.tasks.add(task);
+    }
+
+    public void removeTask(Task task) {
+        this.tasks.remove(task);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

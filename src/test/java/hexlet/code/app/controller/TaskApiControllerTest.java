@@ -1,9 +1,11 @@
 package hexlet.code.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.app.model.label.Label;
 import hexlet.code.app.model.task.Task;
 import hexlet.code.app.model.taskStatus.TaskStatus;
 import hexlet.code.app.model.user.User;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
@@ -21,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +57,9 @@ public class TaskApiControllerTest {
     private TaskRepository taskRepository;
 
     @Autowired
+    private LabelRepository labelRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -66,6 +72,8 @@ public class TaskApiControllerTest {
 
     private Task testTask;
     private Task anotherTask;
+
+    private Label testLabel;
 
     @BeforeEach
     public void setUp() {
@@ -111,6 +119,12 @@ public class TaskApiControllerTest {
                 .build();
         taskRepository.save(testTask);
         taskRepository.save(anotherTask);
+
+        // Создаем тестовый лейбел
+        testLabel = Label.builder()
+                .name("TestLabel")
+                .build();
+        labelRepository.save(testLabel);
     }
 
     // ===== ТЕСТЫ =====
@@ -127,7 +141,7 @@ public class TaskApiControllerTest {
                     "content", "Test task for test",
                     "status", "test_status",
                     "assignee_id", testUser.getId(),
-                    "taskLabelIds", List.of(1)
+                    "taskLabelIds", List.of(testLabel.getId())
             );
 
             mockMvc.perform(post("/api/tasks")
@@ -174,7 +188,7 @@ public class TaskApiControllerTest {
                     "content", "Test task for test update",
                     "status", anotherStatus.getSlug(),
                     "assignee_id", testUser.getId(),
-                    "taskLabelIds", List.of(1)
+                    "taskLabelIds", List.of(testLabel.getId())
             );
 
             mockMvc.perform(put("/api/tasks/" + testTask.getId())
@@ -224,7 +238,8 @@ public class TaskApiControllerTest {
                     "index", 13,
                     "content", "Test task for test",
                     "status", testStatus.getSlug(),
-                    "assignee_id", testUser.getId()
+                    "assignee_id", testUser.getId(),
+                    "taskLabelIds", List.of(testLabel.getId())
             );
 
             mockMvc.perform(post("/api/tasks")
@@ -242,7 +257,8 @@ public class TaskApiControllerTest {
                     "index", 13,
                     "content", "Test task for test",
                     "status", "",
-                    "assignee_id", testUser.getId()
+                    "assignee_id", testUser.getId(),
+                    "taskLabelIds", List.of(testLabel.getId())
             );
 
             mockMvc.perform(post("/api/tasks")
@@ -260,7 +276,8 @@ public class TaskApiControllerTest {
                     "index", 13,
                     "content", "Test task for test",
                     "status", "non-existent-status",
-                    "assignee_id", testUser.getId()
+                    "assignee_id", testUser.getId(),
+                    "taskLabelIds", List.of(99999)
             );
 
             mockMvc.perform(post("/api/tasks")

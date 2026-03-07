@@ -57,7 +57,7 @@ public class Task {
             name = "task_labels",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "label_id"))
-    private Set<Label> labels = new HashSet<>();
+    private Set<Label> labels;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assignee_id")
@@ -67,6 +67,7 @@ public class Task {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    // Добавление Label
     public void addLabel(Label label) {
         if (this.labels == null) {
             this.labels = new HashSet<>();  // ✅ Ленивая инициализация
@@ -82,6 +83,14 @@ public class Task {
         if (this.labels.contains(label)) {
             this.labels.remove(label);
             label.removeTask(this);
+        }
+    }
+
+    // Добавление Assignee
+    public void addAssignee(User assignee) {
+        if (this.assignee == null) {
+            this.setAssignee(assignee);
+            assignee.addTask(this);
         }
     }
 }

@@ -43,9 +43,12 @@ public class Label {
     private LocalDateTime createdAt;
 
     @ManyToMany(mappedBy = "labels")
-    private Set<Task> tasks = new HashSet<>();
+    private Set<Task> tasks;
 
     public void addTask(Task task) {
+        if (this.tasks == null) {
+            this.tasks = new HashSet<>();
+        }
         this.tasks.add(task);
     }
 
