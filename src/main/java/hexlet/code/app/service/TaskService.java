@@ -7,8 +7,12 @@ import hexlet.code.app.dto.taskDTO.TaskPartiallyUpdateDTO;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.TaskMapper;
 import hexlet.code.app.model.label.Label;
+import hexlet.code.app.model.task.Task;
+import hexlet.code.app.model.taskStatus.TaskStatus;
 import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
+import hexlet.code.app.repository.TaskStatusRepository;
+import hexlet.code.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,22 +28,25 @@ public class TaskService {
     private LabelRepository labelRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private TaskMapper mapper;
+
+    @Autowired
+    private TaskStatusRepository taskStatusRepository;
 
     // === Create ===
     public TaskDTO create(TaskCreateDTO taskData) {
         var task = mapper.toEntity(taskData);
 
-        // Добовляем связи с лейболами
-        List<Label> labels = taskData.taskLabelIds().stream()
-                .map(labelId -> {
-                    return labelRepository.findById(labelId)
-                            .orElseThrow(() -> new ResourceNotFoundException("Метки с id: " + labelId + "не найдено"));
-                })
-                .toList();
-        for (var label: labels) {
-            task.addLabel(label);
-        }
+        // Добовляем связи
+        addContactWithLabels(task, taskData.taskLabelIds());
+        addContactWithUsers(task, taskData.assignee_id());
+
+        var status = slugToStatus(taskData.status());
+        task.setTaskStatus(status);
+
         // Сохраняем
         var savedTask = taskRepository.save(task);
         return mapper.toDto(savedTask);
@@ -63,16 +70,13 @@ public class TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException("Задача с id: " + id + "не найдена"));
         mapper.fullUpdate(taskData, task);
 
-        // Добовляем связи с лейболами
-        List<Label> labels = taskData.taskLabelIds().stream()
-                .map(labelId -> {
-                    return labelRepository.findById(labelId)
-                            .orElseThrow(() -> new ResourceNotFoundException("Метки с id: " + labelId + "не найдено"));
-                })
-                .toList();
-        for (var label: labels) {
-            task.addLabel(label);
-        }
+        // Добовляем связи
+        addContactWithLabels(task, taskData.taskLabelIds());
+        addContactWithUsers(task, taskData.assignee_id());
+
+        var status = slugToStatus(taskData.status());
+        task.setTaskStatus(status);
+
         // Сохраняем
         var updatedTask = taskRepository.save(task);
         return mapper.toDto(updatedTask);
@@ -83,19 +87,20 @@ public class TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException("Задача с id: " + id + "не найдена"));
         mapper.partialUpdate(taskData, task);
 
-        // Добовляем связи с лейболами если поле JsonNullable в запросе не null
+        // Добовляем связи если поля переданны в запросе
         if (taskData.taskLabelIds().isPresent()) {
-            List<Label> labels = taskData.taskLabelIds().get().stream()
-                    .map(labelId -> {
-                        return labelRepository.findById(labelId)
-                                .orElseThrow(()
-                                        -> new ResourceNotFoundException("Метки с id: " + labelId + "не найдено"));
-                    })
-                    .toList();
-            for (var label: labels) {
-                task.addLabel(label);
-            }
+            addContactWithLabels(task, taskData.taskLabelIds().get());
         }
+
+        if (taskData.assignee_id().isPresent()) {
+            addContactWithUsers(task, taskData.assignee_id().get());
+        }
+
+        if (taskData.status().isPresent()) {
+            var status = slugToStatus(taskData.status().get());
+            task.setTaskStatus(status);
+        }
+
         // Сохраняем
         var updatedTask = taskRepository.save(task);
         return mapper.toDto(updatedTask);
@@ -103,9 +108,37 @@ public class TaskService {
 
     // === Delete ===
     public void delete(Long id) {
-        if (!taskRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Задача с id: " + id + "не найдена");
-        }
+        var task = taskRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Задача с id: " + id + "не найдена"));
+        // Удаляем у связанного пользователя задачу
+        var user = task.getAssignee();
+        user.removeTask(task);
+
         taskRepository.deleteById(id);
+    }
+
+    // Вспомогательные методы
+    public void addContactWithLabels(Task task, List<Long> labelsId) {
+        List<Label> labels = labelsId.stream()
+                .map(labelId -> {
+                    return labelRepository.findById(labelId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Метки с id: " + labelId + "не найдено"));
+                })
+                .toList();
+        for (var label: labels) {
+            task.addLabel(label);
+        }
+    }
+
+    public void addContactWithUsers(Task task, Long assigneeId) {
+        var assignee = userRepository.findById(assigneeId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Пользователь с id " + assigneeId + " не существует"));
+        task.addAssignee(assignee);
+    }
+
+    public TaskStatus slugToStatus(String slug) {
+        return taskStatusRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResourceNotFoundException("Статус со слагом: " + slug + " не найден"));
     }
 }

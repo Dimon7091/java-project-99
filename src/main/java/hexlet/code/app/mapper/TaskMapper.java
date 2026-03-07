@@ -38,9 +38,8 @@ public abstract class TaskMapper {
 
     @Mapping(source = "title", target = "name")
     @Mapping(source = "content", target = "description")
-    @Mapping(source = "assignee_id", target = "assignee", qualifiedByName = "assigneeIdToUser")
-    @Mapping(source = "status", target = "taskStatus", qualifiedByName = "slugToStatus")
     @Mapping(target = "labels", ignore = true)
+    @Mapping(target = "assignee", ignore = true)
     public abstract Task toEntity(TaskCreateDTO dto);
 
     @Mapping(source = "name", target = "title")
@@ -51,34 +50,21 @@ public abstract class TaskMapper {
 
     @Mapping(source = "title", target = "name")
     @Mapping(source = "content", target = "description")
-    @Mapping(source = "assignee_id", target = "assignee", qualifiedByName = "assigneeIdToUser")
-    @Mapping(source = "status", target = "taskStatus", qualifiedByName = "slugToStatus")
     @Mapping(target = "labels", ignore = true)
+    @Mapping(target = "assignee", ignore = true)
     public abstract void fullUpdate(TaskFullUpdateDTO dto, @MappingTarget Task model);
 
     @Mapping(source = "title", target = "name")
     @Mapping(source = "content", target = "description")
-    @Mapping(source = "assignee_id", target = "assignee", qualifiedByName = "assigneeIdToUser")
-    @Mapping(source = "status", target = "taskStatus", qualifiedByName = "slugToStatus")
     @Mapping(target = "labels", ignore = true)
+    @Mapping(target = "assignee", ignore = true)
     public abstract void partialUpdate(TaskPartiallyUpdateDTO dto, @MappingTarget Task model);
-
-    @Named("slugToStatus")
-    protected TaskStatus slugToStatus(String slug) {
-        return taskStatusRepository.findBySlug(slug)
-                .orElseThrow(() -> new ResourceNotFoundException("Статус задачи со слагом: " + slug + " не найден"));
-    }
 
     @Named("statusToSlug")
     protected String statusToSlug(TaskStatus taskStatus) {
         return taskStatus.getSlug();
     }
 
-    @Named("assigneeIdToUser")
-    protected User assigneeIdToUser(Long assigneeId) {
-        return userRepository.findById(assigneeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Пользователь с id: " + assigneeId + " не найден"));
-    }
 
     @Named("assigneeToAssigneeId")
     protected Long assigneeToAssigneeId(User assignee) {
