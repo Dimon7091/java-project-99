@@ -1,6 +1,6 @@
 package hexlet.code.app.service;
 
-import hexlet.code.app.dto.userDTO.IndexResponseData;
+import hexlet.code.app.dto.userDTO.IndexResponseUserData;
 import hexlet.code.app.dto.userDTO.UserCreateDTO;
 import hexlet.code.app.dto.userDTO.UserDTO;
 import hexlet.code.app.dto.userDTO.UserFullUpdateDTO;
@@ -37,10 +37,10 @@ public class UserService {
     }
 
     // === Read ===
-    public IndexResponseData findAll(Pageable pageable) {
+    public IndexResponseUserData findAll(Pageable pageable) {
         var pageUsers =  userRepository.findAll(pageable).map(mapper::toDto);
         var totalUsers = pageUsers.getTotalElements();
-        return new IndexResponseData(pageUsers.stream().toList(), totalUsers);
+        return new IndexResponseUserData(pageUsers.stream().toList(), totalUsers);
     }
 
     public UserDTO findById(Long id) {
@@ -96,8 +96,8 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Пользователь с id " + id + " не существует"));
         if (!user.getTasks().isEmpty()) {
             throw new ConflictException(
-                    "Невозможно удалить пользователя. Он назначен исполнителем в " +
-                            user.getTasks().size() + " задачах!"
+                    "Невозможно удалить пользователя. Он назначен исполнителем в "
+                            + user.getTasks().size() + " задачах!"
             );
         }
         userRepository.deleteById(id);

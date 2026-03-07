@@ -1,9 +1,9 @@
 package hexlet.code.app.service;
 
-import hexlet.code.app.dto.taskDTO.TaskCreateDTO;
-import hexlet.code.app.dto.taskDTO.TaskDTO;
 import hexlet.code.app.dto.taskDTO.TaskFullUpdateDTO;
+import hexlet.code.app.dto.taskDTO.TaskDTO;
 import hexlet.code.app.dto.taskDTO.TaskPartiallyUpdateDTO;
+import hexlet.code.app.dto.taskDTO.TaskCreateDTO;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.TaskMapper;
 import hexlet.code.app.model.label.Label;
@@ -14,6 +14,9 @@ import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,9 +62,8 @@ public class TaskService {
         return mapper.toDto(task);
     }
 
-    public List<TaskDTO> findAll() {
-        var tasks = taskRepository.findAll();
-        return tasks.stream().map(mapper::toDto).toList();
+    public Page<TaskDTO> findAll(Pageable pageable, Specification<Task> spec) {
+        return taskRepository.findAll(spec, pageable).map(mapper::toDto);
     }
 
     // === Update ===
