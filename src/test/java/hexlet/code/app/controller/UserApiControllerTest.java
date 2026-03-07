@@ -1,7 +1,11 @@
 package hexlet.code.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.app.model.task.Task;
+import hexlet.code.app.model.taskStatus.TaskStatus;
 import hexlet.code.app.model.user.User;
+import hexlet.code.app.repository.TaskRepository;
+import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.util.JWTUtils;
 import jakarta.transaction.Transactional;
@@ -51,6 +55,8 @@ public class UserApiControllerTest {
 
     private User testUser;
     private User anotherUser;
+    private Task testTask;
+    private TaskStatus testStatus;
     private String userToken;
 
     @BeforeEach
@@ -74,6 +80,20 @@ public class UserApiControllerTest {
                 .lastName("user")
                 .build();
         userRepository.save(anotherUser);
+
+        // Создаем тестовые статусы
+        testStatus = TaskStatus.builder()
+                .name("Test status")
+                .slug("test_status")
+                .build();
+
+        // Создаем тестовые задачи
+        testTask = Task.builder()
+                .name("Task")
+                .index(12)
+                .description("Tesk task")
+                .taskStatus(testStatus)
+                .build();
 
         // Генерируем токен для тестового пользователя
         userToken = jwtUtils.generateToken(testUser);
@@ -237,6 +257,17 @@ public class UserApiControllerTest {
 
             // Проверяем, что пользователь действительно удален
             assertThat(userRepository.findById(testUser.getId())).isEmpty();
+        }
+
+        @Test
+        @DisplayName("DELETE /api/users/{id} - удаление своего профиля c задачей (conflict 409)")
+        void deleteUser_OwnProfile_ShouldReturn409() throws Exception {
+            // Добавляем задачу юзеру
+            testTask.addAssignee(testUser);
+
+            mockMvc.perform(delete("/api/users/{id}", testUser.getId())
+                            .header("Authorization", "Bearer " + userToken))
+                    .andExpect(status().isConflict());
         }
     }
 
