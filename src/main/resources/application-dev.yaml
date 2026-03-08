@@ -19,5 +19,5 @@ spring:
       path: /h2-console       # опционально
 
 rsa:
-  private-key: classpath:certs-dev/private-key.pem
-  public-key: classpath:certs-dev/public-key.pem
+  private-key: classpath:/certs-dev/private-key.pem
+  public-key: classpath:/certs-dev/public-key.pem
